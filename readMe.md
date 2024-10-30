@@ -1,5 +1,8 @@
 ## The Whatever Project
-- Premise: whatever
-- Gameplay: whatever
-- Story: whatever
+- Premise: Person in a dungeon gets silly and kills everything, looting rooms and defeating bosses.
+- Programmers: Deaven, Nathan, Johnathan
+- Gameplay:
+  - Turn Based Combat
+  - Text Actions (type in an action, use switchcase to check inputs)
+  - ASCII Based Graphics (Using keyboard characters as pixels)
 - whatever? whatever.
