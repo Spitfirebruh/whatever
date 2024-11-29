@@ -4,12 +4,20 @@
 #include <iostream>
 #include <string>
 #include "player.h"
+#include <vector>
 using namespace std;
 
 class Player;
 
-class invItems {
+class Items {
 public:
-	void itemPlaceHolder(Player& player, int id, int quantity);
+    vector<int> itemCounts;
+    int id;
+    string name;
+    string description;
+    int quantity;
+    void itemsList();
+    void addItem();
+    void useItem();
 };
 #endif

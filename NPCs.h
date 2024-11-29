@@ -12,7 +12,14 @@ class Enemy;
 class enemyList {
 public:
 	void enemyType(Enemy &enemy, Player& player, int typeEnemy);
+	void bossType(Enemy& enemy, Player& player, int boss);
 	void titleClass(Enemy& enemy, Player& player, int title);
-	void bossClass(Enemy& enemy, Player& player, int bossTitle);
+	void battleDialogue(int win, int lose);
+	void bossEndDialogue();
+	void bossBattleDialogue(Enemy& enemy, int witty);
+	int randBD;
+	string duringBattle;
+	string winBattle;
+	string loseBattle;
 };
 #endif

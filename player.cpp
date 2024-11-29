@@ -1,83 +1,153 @@
-#include "player.h" // Player Header File | Used to define player health and damage.
-#include "enemy.h" // Enemy Header File | Used to reference enemy health and damage.
-#include "items.h" // Items Header File | Used to reference items.
+#include "player.h" // Used to define player health and damage.
+#include "enemy.h" // Used to reference enemy health and damage.
+#include "items.h" // Used to reference items.
 #include <iostream>
 using namespace std; // Removes the need for "std::".
 
-// Decreases the enemy's health by the player's attack. | Varies amount of damage depending on player level.
-void Player::playerAttack(Enemy& enemy) {
+// Player's attack function
+void Player::playerAttack(enemyList& enemylist, Enemy& enemy) {
 	Player player;
-	cout << "Player Attacks!" << endl;
-	enemy.enemHealthDecrease(*this, playerDamage);
+	cout << playerName << " Attacks!" << endl;
+
+	// Check's if enemy is blocking.
+	if (enemy.EnemyIsBlocking == false) {
+		enemy.enemHealthDecrease(*this, enemylist, playerDamage);
+	}
+	else if (enemy.EnemyIsBlocking == true) {			
+		enemy.enemHealthDecrease(*this, enemylist, playerDamage / 2); // If the enemy is blocking, int playerDamage is divided by 2.
+		enemy.EnemyIsBlocking = false; // Sets the enemy's block back to false.
+	}
 };
 
-// Outputs a message that the player blocked, will have a real function in the future.
+// Sets the isPlayerBlocking function to true, 
 void Player::playerBlock() {
-	cout << "Player Blocks!" << endl;
+	cout << playerName << " Blocks!" << endl;
+	isPlayerBlocking = true;
 };
 
 // Outputs a message that the player used an item, will have a real function in the future.
-void Player::playerInventory(invItems &invitems) {
-	cout << "Player Opens Inventory." << endl;
+void Player::playerInventory(Items &invitems) {
+	cout << playerName << " Opens Inventory." << endl;
+
 };
 
 // Returns the Player's Health
 int Player::getPlayerHealth() {
 	return playerHealth;
 };
+int Player::getPlayerDamage() {
+	return playerDamage;
+};
 
-// Used to decrease the player's health based on the enemy's damage.
-void Player::healthAlteration(int healthChangeAmount) {
-	playerHealth += healthChangeAmount;
+
+// Used to decrease the player's health based on the enemy or player action.
+void Player::healthAlteration(Enemy& enemy, enemyList& enemylist, int healthChangeAmount) {
+	playerHealth += healthChangeAmount; // Adds the int healthChangeAmount to int playerHealth.
 	if (healthChangeAmount < 0) {
-		cout << "Player takes " << healthChangeAmount * -1 << " damage." << endl;
+		cout << playerName << " takes " << healthChangeAmount * -1 << " damage." << endl;
 	}
 	else if (playerHealth >= maximumHealth) {
 		playerHealth = maximumHealth;
-		cout << "Player has fully healed." << endl;
+		cout << playerName << " has fully healed." << endl;
 	}
-
 	if (playerHealth <= 0) {
 		playerHealth = 0;
-		cout << "Player Has Fainted!" << endl;
 	}
-	cout << "Player's Health: " << getPlayerHealth() << endl;
-}
+	playerHealthBar();
+	if (playerHealth == 0) {
+		cout << playerName << " Has Fainted!" << endl;
+		cout << string(32, '-') << endl;
+		cout << enemy.getName() << ": " << enemylist.winBattle << endl;
+	}
+};
 
-// Sets player's health back to 100.
+// Sets int playerHealth to int maximumHealth, printing a message to the console to notify the player.
 void Player::revivePlayer() {
-	cout << "Player was revived!" << endl;
+	cout << playerName << " was fully healed." << endl;
 	playerHealth = maximumHealth;
-}
+};
 
-// Checks the player's health based on their
-void Player::levelCheck() {
+// Checks the player's level based on their experience point amount.
+void Player::updateLevel() {
 	if (exp < 10) {
 		level = 1;
 	}
 	else if (exp >= 10 && exp < 20) {
 		level = 2;
 	}
-	else if (exp >= 20 && exp < 50) {
+	else if (exp >= 20 && exp < 30) {
 		level = 3;
 	}
-	else if (exp >= 50 && exp < 100) {
+	else if (exp >= 30 && exp < 40) {
 		level = 4;
 	}
-	else if (exp > 100) {
+	else if (exp >= 40 && exp < 50) {
 		level = 5;
 	}
-	else {
-		cout << "nuh uh" << endl;
+	else if (exp >= 50 && exp < 60) {
+		level = 6;
+	}
+	else if (exp >= 60 && exp < 70) {
+		level = 7;
+	}
+	else if (exp >= 70 && exp < 80) {
+		level = 8;
+	}
+	else if (exp >= 80 && exp < 90) {
+		level = 9;
+	}
+	else if (exp >= 90 && exp <= 100) {
+		level = 10;
+	}
+	// If player's exp exceeds 99, sets int exp to 99.
+	if (exp >= 100) {
+		exp = 99;
 	}
 
-}
+};
 
-void Player::updatePlayerStats() {
-	maximumHealth = 100 + ((level - 1) * 20);
-	playerDamage = 5 + ((level - 1) * 5);
-}
+// Updates player's stats based on their level.
+void Player::updateStats() {
+	maximumHealth = 20 + ((level - 1) * 5);
+	playerDamage = 4 + ((level - 1) * 2);
+};
 
-void Player::getPlayerXP() {
-	return levelCheck();
-}
+// Assigns the string rankSC a title based on the player's int score amount.
+void Player::updateRank() {
+	if (score < 50) {
+		rankSc = "The Optimist";
+	}
+	else if (score >= 50 && score < 100) {
+		rankSc = "The Not-So-Brave Explorer";
+	}
+	else if (score >= 100 && score < 150) {
+		rankSc = "The Great Adventurer";
+	}
+	else if (score >= 150 && score < 200) {
+		rankSc = "The Master Adventurer";
+	}
+	else if (score >= 200 && score < 250) {
+		rankSc = "The Overachiever";
+	}
+	else if (score >= 250 && score < 400) {
+		rankSc = "The Completionist";
+	}
+	else if (score >= 500) {
+		rankSc = "The Genocider";
+	}
+};
+
+void Player::playerHealthBar() {
+	int spaceOfHealth = maximumHealth / 2; // Divides the maximumHealth by 2 to get the spaceOfHealth | Each bar is equal to 2 health.
+	int filledSegments = (playerHealth * spaceOfHealth) / maximumHealth; // Calculates filled segments
+	int unfilledSegments = spaceOfHealth - filledSegments; // Calculates unfilled segments
+		// Player info.
+		cout << playerHealth << "/" << maximumHealth
+			 << string(spaceOfHealth - 5, ' ') << "LVL " << level << endl;
+		// Player's health bar.
+		cout << "["
+			<< string(filledSegments, '|')
+			<< string(unfilledSegments, ' ')
+			<< "]" << endl;
+
+};
