@@ -11,7 +11,8 @@ using namespace std;
 
 class BattleLoop {
 public:
-	void chooseTurnCombat(Player& player, Enemy& enemy, Items& invitems, enemyList& enemylist, int currentTurn, int battleChoice, int enemyBChoice, int turnCounter);
-	void diceRoll(int chance);
+	void chooseTurnCombat(Player& player, Enemy& enemy, Item inventory[], int& itemCount, enemyList& enemylist, int currentTurn, int battleChoice, int enemyBChoice, int turnCounter);
+	void diceRoll(Player& player, Enemy& enemy, Item inventory[], int& itemCount, enemyList& enemylist);
+	bool bossWinLoss = false;
 };
 #endif

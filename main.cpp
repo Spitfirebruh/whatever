@@ -1,22 +1,24 @@
-
-#include "player.h"     // Includes the player & related definitions
-#include "enemy.h"      // Includes the enemy & related definitions
-#include "battle.h"     // Includes the battle & related definitions
-#include "items.h"      // Includes the items & related definitions
-#include "menus.h"      // Includes menus & related definitions
-#include <map>          // Includes the map & related definitions
-#include "movement.h"   // Includes the movement & related definitions
-#include <iostream>     // Gives input/output operations
-#include <string>       // Gives strings of characters
-#include <cstdlib>      
-#include <ctime>        
-#include <stdio.h>      
-#include "Room.h"       // Includes the Room & related definitions
-#include "Map.h"        // Includes the Map & related definitions
-
+// pretty much everything that lets the main file not have to be 1 bajillion lines
+// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#include "player.h"
+#include "enemy.h"
+#include "battle.h"
+#include "difficulty.h"
+#include "items.h"
+#include "menus.h"
+#include <map>
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+#include <stdio.h>
+#include "Room.h"
+#include "Map.h"
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// pretty much everything that lets the main file not have to be 1 bajillion lines
 
 using namespace std;
-// Displays the menu of actions the player can perform
+
 void displayMenu() {
     cout << "1. Go North \n";
     cout << "2. Go South \n";
@@ -51,14 +53,15 @@ void displayCurrentRoom(const Room& room) {
 
 int main() {
     srand(time(0));
-    Menu menus;                     // Creates an instance of Menus.
+    Menu menus;                    // Creates an instance of Menus.
     Player player;                  // Creates an instance of Player
     enemyList enemylist;            // Creates an instance of enemyList
+    Difficulty difficulty;          // Creates an instance of Difficulty
     Enemy enemy;                    // Creates an instance of Enemy
-    BattleLoop battle;              // Creates an instance of battle
-    Map map;                        // Creates an instance of map
-    Item inventory[9];              // Creates an array of 9 for the inventory
-    int itemCount = 0;              // Starter inventory hand nothing
+    BattleLoop battle;              // Creates an instance of testSelect
+    Map map;
+    Item inventory[9];                    // Creates an instance of invItems
+    int itemCount = 0;
 
     Map gameMap;                        // Initializes the game map
     gameMap.initializeRooms();          // Sets up rooms and their connections
@@ -75,35 +78,43 @@ int main() {
 
             // Move player north
         case 1:
-            movement(gameMap, player, enemy, inventory, itemCount, enemylist, battle, "north");
+            gameMap.movePlayer("north", player, enemy, inventory, itemCount, enemylist, battle);
             break;
 
             // Move player south
         case 2:
-            movement(gameMap, player, enemy, inventory, itemCount, enemylist, battle, "south");
+            gameMap.movePlayer("south", player, enemy, inventory, itemCount, enemylist, battle);
             break;
 
             // Move player east
         case 3:
-            movement(gameMap, player, enemy, inventory, itemCount, enemylist, battle, "east");
+            gameMap.movePlayer("east", player, enemy, inventory, itemCount, enemylist, battle);
             break;
 
             // Move player west
         case 4:
-            movement(gameMap, player, enemy, inventory, itemCount, enemylist, battle, "west");
+            gameMap.movePlayer("west", player, enemy, inventory, itemCount, enemylist, battle);
             break;
 
             // Pick up an item in the room
         case 5:
-            itemPickup(currentRoom, gameMap);
+            if (!currentRoom.getItems().empty()) {
+                string item = currentRoom.getItems().front();           // Get the first item
+                gameMap.addItemToPlayer(item);                          // Add item to player's inventory
+                cout << "You picked up: " << item << "\n";              // Notify the player
+            }
+            else {
+                cout << "No items to pick up! \n";                      // Notify if no items are available
+            }
             break;
         case 6:
-            saveGame(player);
+            player.saveGame();
             break;
 
             // Exit the game
         case 0:
-            return exitGame();
+            cout << "Exiting game. Goodbye! \n";
+            return 0;
 
             // Handle invalid menu choices
         default:

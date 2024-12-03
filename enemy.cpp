@@ -24,12 +24,12 @@ void Enemy::enemyBlock(enemyList& enemylist, int checkTurn) {
 };
 
 void Enemy::enemyHeal(enemyList& enemylist) {
-	cout << getName() << " heals for " << enemHealAmount << " health." << endl;
-	enemyHealthBar();
 	enemyHealth += enemHealAmount;
+	cout << getName() << " heals for " << enemHealAmount << " health." << endl;
 	if (enemyHealth > maxEnemyHealth) {
 		enemyHealth = maxEnemyHealth;
 	}
+	enemyHealthBar();
 };
 
 void Enemy::enemHealthDecrease(Player& player, enemyList& enemylist, int playerDamageAmount) {
@@ -43,7 +43,7 @@ void Enemy::enemHealthDecrease(Player& player, enemyList& enemylist, int playerD
 		cout << getName() << " has Fainted!" << endl;
 		player.exp += xpReward;
 		player.score += scoreReward;
-		cout << "Player gained " << xpReward << " exp!" << endl;
+		cout << "Player gained " << xpReward << " EXP!" << endl;
 		cout << string(32, '-') << endl;
 		cout << getName() << ": " << enemylist.loseBattle << endl;
 	}

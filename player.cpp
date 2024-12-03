@@ -25,10 +25,13 @@ void Player::playerBlock() {
 	isPlayerBlocking = true;
 };
 
-// Outputs a message that the player used an item, will have a real function in the future.
-void Player::playerInventory(Items &invitems) {
-	cout << playerName << " Opens Inventory." << endl;
+// Displays the player's inventory.
+void Player::playerInventory(Item inventory[], int& itemCount) {
+	displayInventory(inventory, itemCount);
+};
 
+void Player::useItem(Item& item, Enemy& enemy, enemyList& enemylist) {
+	item.applyEffect(*this, enemy, enemylist);
 };
 
 // Returns the Player's Health
@@ -45,6 +48,9 @@ void Player::healthAlteration(Enemy& enemy, enemyList& enemylist, int healthChan
 	playerHealth += healthChangeAmount; // Adds the int healthChangeAmount to int playerHealth.
 	if (healthChangeAmount < 0) {
 		cout << playerName << " takes " << healthChangeAmount * -1 << " damage." << endl;
+	}
+	else if (healthChangeAmount > 0) {
+		cout << playerName << " heals " << healthChangeAmount << " HP." << endl;
 	}
 	else if (playerHealth >= maximumHealth) {
 		playerHealth = maximumHealth;
@@ -63,7 +69,7 @@ void Player::healthAlteration(Enemy& enemy, enemyList& enemylist, int healthChan
 
 // Sets int playerHealth to int maximumHealth, printing a message to the console to notify the player.
 void Player::revivePlayer() {
-	cout << playerName << " was fully healed." << endl;
+	cout << playerName << " was fully healed by a thoughtful fairy." << endl;
 	playerHealth = maximumHealth;
 };
 
@@ -149,5 +155,18 @@ void Player::playerHealthBar() {
 			<< string(filledSegments, '|')
 			<< string(unfilledSegments, ' ')
 			<< "]" << endl;
+};
 
+void Player::applyItemAlteration(int amount) {
+	if (amount == 0) {
+		cout << "Don't use this function, this did literally nothing." << endl;
+	}
+	else if (amount < 0) {
+		playerDamage += amount;
+		cout << playerName << "'s ATK was temporarily decreased by " << amount << "!" << endl;
+	}
+	else if (amount > 0) {
+		playerDamage += amount;
+		cout << playerName << "'s ATK was temporarily increased by " << amount << "!" << endl;
+	}
 };

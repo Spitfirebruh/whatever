@@ -30,8 +30,8 @@ void enemyList::enemyType(Enemy& enemy, Player& player, int typeEnemy) {
 		break;
 	case 3: // Enemy: Skeleton
 		enemy.setName("Sketchy");
-		enemy.enemyDamage = -4 - 2 * player.level;
-		enemy.maxEnemyHealth = 35 + 5 * player.level;
+		enemy.enemyDamage = -2 - 2 * player.level;
+		enemy.maxEnemyHealth = 25 + 5 * player.level;
 		enemy.enemyHealth = enemy.maxEnemyHealth;
 		enemy.enemHealAmount = 0 + 2 * player.level;
 		enemy.xpReward = 6 + player.level;
@@ -41,7 +41,7 @@ void enemyList::enemyType(Enemy& enemy, Player& player, int typeEnemy) {
 	case 4: // Boss Enemy: Plink
 		enemy.setName("Echo");
 		enemy.enemyDamage = -4 - 2 * player.level;
-		enemy.maxEnemyHealth = 25 + 5 * player.level;
+		enemy.maxEnemyHealth = 20 + 5 * player.level;
 		enemy.enemyHealth = enemy.maxEnemyHealth;
 		enemy.enemHealAmount = 4 + 2 * player.level;;
 		enemy.xpReward = 4 + player.level;

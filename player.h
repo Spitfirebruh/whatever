@@ -3,6 +3,7 @@
 #define PLAYER_H
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "enemy.h"
 #include "items.h"
 using namespace std;
@@ -13,33 +14,72 @@ class enemyList;
 
 class Player {
 	public:
-		void playerAttack(enemyList& enemylist, Enemy &enemy);		 // Player's attack function.
-		void playerBlock();						// Player's block function.
-		void playerInventory(Items &invitems); // Player inventory function, calls to items.h & items.cpp.
-		bool isPlayerBlocking = false;		  // If the player blocks, this is set to "true", otherwise is false.
-		int getPlayerHealth();				 // Gets the player's health from the integer 'playerHealth'.
-		int level = 1;						// The player's level, used to calculate the player's stats; preset to 1.
-		int exp = 0;					   // The player's experience points, used to calculate the player's level; preset to 0.
-		int score = 0;					  // The player's overall score, used to calculate the player's rank, displayed at the end of the game.
-		string rankSc;					 // The string for the player's rank, used to describe the rank in words.
-		string playerName = "placeholder_name";   // The player's name, set by the player themself.
-		int maximumHealth = 20;		   // The player's maximum health, used to limit how big int playerHealth can be.
-		void healthAlteration(Enemy& enemy, enemyList& enemylist, int healthChangeAmount); // Alters int playerHealth, used for enemy damage and player healing.
-		void revivePlayer();		 // Sets int playerHealth to int maximumHealth.
-		void updateLevel();			// 
-		void updateStats();
-		void updateRank();
-		int getPlayerDamage();
-		void playerHealthBar();
+		void playerAttack(enemyList& enemylist, Enemy &enemy); // Player's attack function.
+		void playerBlock();	// Player's block function.
+		void playerInventory(Item inventory[], int& itemCount); // Player inventory function.
+		void useItem(Item& item, Enemy& enemy, enemyList& enemylist); // Function to use and apply effects of an item.
+		bool isPlayerBlocking = false; // Player's block bool, if the player isn't blocking it's false, otherwise true.
+		int getPlayerHealth(); // Gets the player's health.
+		int level = 1; // The player's level, used to calculate stats.
+		int exp = 0; // The player's experience points, used to calculate level.
+		int score = 0; // The player's score, used to calculate rank.
+		string rankSc; // The player's rank.
+		string playerName = "placeholder_name"; // The player's name
+		int maximumHealth = 20;	// The player's maximum health
+		void healthAlteration(Enemy& enemy, enemyList& enemylist, int healthChangeAmount); // Alters player health.
+		void revivePlayer(); // Sets player's health to maximum.
+		void updateLevel();	// Updates player level.
+		void updateStats(); // Updates player stats.
+		void updateRank(); // Updates player rank.
+		int getPlayerDamage(); // Gets player damage.
+		void playerHealthBar(); // Displays player health bar.
+		void applyItemAlteration(int amount); // Alters health, attack, and/or applies buffs/debuff.
+
+
+        // Save game function
+        void saveGame() const {
+            ofstream outFile("savegame.txt");  // Open file for writing (text format)
+            if (outFile.is_open()) {
+                outFile << playerName << endl;
+                outFile << level << endl;
+                outFile << exp << endl;
+                outFile << score << endl;
+                outFile << maximumHealth << endl;
+                outFile << playerHealth << endl;
+                outFile << playerDamage << endl;
+                outFile << rankSc << endl;
+                outFile << isPlayerBlocking << endl;
+                outFile.close();  // Close the file
+            }
+            else {
+                cout << "Error saving game." << endl;
+            }
+        }
+
+        // Load game function
+        void loadGame() {
+            ifstream inFile("savegame.txt");  // Open file for reading
+            if (inFile.is_open()) {
+                getline(inFile, playerName);  // Read player name
+                inFile >> level;
+                inFile >> exp;
+                inFile >> score;
+                inFile >> maximumHealth;
+                inFile >> playerHealth;
+                inFile >> playerDamage;
+                inFile.ignore();  // Ignore newline character
+                getline(inFile, rankSc);  // Read rank
+                inFile >> isPlayerBlocking;
+                inFile.close();  // Close the file
+            }
+            else {
+                cout << "No saved game found, starting fresh!" << endl;
+            }
+        }
+
 	private:
-		int playerHealth = 20; // Sets the player's health to 100 globally, cannot be changed as it's in private.
-		int playerDamage = 5;
+		int playerHealth = 20; // Sets the player's health.
+		int playerDamage = 4; // Sets the player's damage.
 };
 
-class Menus {
-public:
-	void titleScreen();
-	void settingsMenu();
-	void blockNotification();
-};
 #endif

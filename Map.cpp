@@ -38,16 +38,23 @@ void Map::addRoom(const Room& room) {
 }
 
 // Moves the player in the specified direction if possible
-bool Map::movePlayer(const string& direction) {
+bool Map::movePlayer(const string& direction, Player& player, Enemy& enemy, Item inventory[], int& itemCount, enemyList& enemylist, BattleLoop& battle) {
     Room& current = getCurrentRoom(); // Reference to the current room
-
     for (const auto& door : current.getDoors()) {
         if (door.direction == direction) { // Check if the direction matches a door
             if (door.status == "Open") { // If the door is open, move to the connected room
+                previousRoom = currentRoom;  // Save the current room as previous
                 currentRoom = door.connectedRoom;
+                if (currentRoom == "Prison Chamber") {
+                    handleBossEncounter(player, enemy, inventory, itemCount, enemylist, battle);
+                }
+                else {
+                    battle.diceRoll(player, enemy, inventory, itemCount, enemylist);
+                }
                 return true;
             } else if (door.status == "Locked" && playerHasItem(door.requiredKey)) {
                 // If the door is locked, check for the required key and unlock it
+                previousRoom = currentRoom;  // Save the current room as previous
                 current.unlockDoor(direction, door.requiredKey);
                 currentRoom = door.connectedRoom;
                 cout << "You used the " << door.requiredKey << " to unlock the door.\n";
@@ -232,4 +239,32 @@ void Map::initializeRooms() {
                {},
                {},
                {});
+}
+
+
+void Map::handleBossEncounter(Player& player, Enemy& enemy, Item inventory[], int& itemCount, enemyList& enemylist, BattleLoop& battle) {
+    Room& current = getCurrentRoom();
+    if (current.getName() == "Prison Chamber") {
+        cout << "You encounter the boss: The Hollowed!" << endl;
+        enemylist.bossType(enemy, player, 1);
+        battle.chooseTurnCombat(player, enemy, inventory, itemCount, enemylist, 1, 0, 0, 0);
+
+        if (battle.bossWinLoss == false) {
+            cout << "You were defeated by The Hollowed. Retreating to the previous room!" << endl;
+            moveToPreviousRoom(); // Move the player backward
+        }
+        else if (battle.bossWinLoss == true) {
+            cout << "Congratulations! You defeated The Hollowed and can now proceed south to the exit." << endl;
+        }
+    }
+}
+
+void Map::moveToPreviousRoom() {
+    if (!previousRoom.empty()) {
+        currentRoom = previousRoom;
+        cout << "You have been sent back to " << currentRoom << "." << endl;
+    }
+    else {
+        cout << "There is no previous room to move to!" << endl;
+    }
 }
