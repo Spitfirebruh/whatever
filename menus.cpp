@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include "menus.h"
+
+#include <limits>
+
 #include "player.h"
 #include "enemy.h"
 #include "NPCs.h"

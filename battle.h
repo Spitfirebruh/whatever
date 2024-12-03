@@ -6,7 +6,7 @@
 #include "enemy.h"
 #include "items.h"
 #include "player.h"
-#include "difficulty.h"
+//#include "difficulty.h"
 using namespace std;
 
 class BattleLoop {
