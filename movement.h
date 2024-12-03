@@ -2,9 +2,9 @@
 #define MOVEMENT_H
 #include "movement.h"
 #include "Map.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Battle.h"
+#include "player.h"
+#include "enemy.h"
+#include "battle.h"
 #include "Room.h"
 #include <vector>
 #include <string>

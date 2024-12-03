@@ -3,7 +3,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "battle.h"
-#include "difficulty.h"
+//#include "difficulty.h"
 #include "items.h"
 #include "menus.h"
 #include <map>
@@ -56,7 +56,7 @@ int main() {
     Menu menus;                    // Creates an instance of Menus.
     Player player;                  // Creates an instance of Player
     enemyList enemylist;            // Creates an instance of enemyList
-    Difficulty difficulty;          // Creates an instance of Difficulty
+    //Difficulty difficulty;          // Creates an instance of Difficulty
     Enemy enemy;                    // Creates an instance of Enemy
     BattleLoop battle;              // Creates an instance of testSelect
     Map map;
